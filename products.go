@@ -1,9 +1,18 @@
 package main
 
-import "net/http"
-import "encoding/json"
-import "github.com/jacobdam/gochat/models"
+import (
+	"encoding/json"
+	"net/http"
+
+	"github.com/gorilla/context"
+
+	"github.com/jacobdam/gochat/datastore"
+	"github.com/jacobdam/gochat/models"
+)
 
 var ProductsHandler http.HandlerFunc = func(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(models.AllProducts)
+	var ds *datastore.DataStore = context.Get(r, "ds").(*datastore.DataStore)
+	var products []models.Product
+	ds.QueryAllProducts(&products)
+	json.NewEncoder(w).Encode(products)
 }
