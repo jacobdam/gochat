@@ -8,11 +8,21 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
+	"github.com/jacobdam/gochat/config"
 	"github.com/jacobdam/gochat/datastore"
 )
 
+var APP_ENV string
+
+func init() {
+	APP_ENV = os.Getenv("APP_ENV")
+	if APP_ENV == "" {
+		APP_ENV = "development"
+	}
+}
+
 func createDS() *datastore.DataStore {
-	ds, _ := datastore.New(datastore.Config{"localhost:27017", "gochat"})
+	ds, _ := datastore.New(config.DB[APP_ENV])
 	return ds
 }
 
